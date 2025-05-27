@@ -83,6 +83,7 @@ function formatTime(seconds) {
 }
 
 // Update genre description and UI
+// Update genre description and UI
 function updateGenreInfo(genreKey) {
   if (genreKey === 'custom') {
     genreDescriptionText.textContent =
@@ -108,7 +109,13 @@ function updateGenreInfo(genreKey) {
     currentGenreSpan.textContent = '-';
     uploadSection.style.display = 'none';
   }
+
+  // NEW: Load 3D model background
+  if (typeof window.loadModelForGenre === 'function') {
+    window.loadModelForGenre(genreKey);
+  }
 }
+
 
 // Stop currently playing audio and cleanup
 function stopAudio() {
