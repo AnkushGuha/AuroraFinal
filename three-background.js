@@ -1,11 +1,15 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js';
-import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/loaders/GLTFLoader.js';
-
 const canvas = document.getElementById('threeCanvas');
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
 const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+
 camera.position.z = 2;
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
@@ -17,40 +21,35 @@ function loadModelForGenre(genreKey) {
   const modelPaths = {
     pop: 'model_1.glb',
     sad: 'model_2.glb',
-    lofi: 'model_3.glb',
-    electronic: 'model_4.glb',
+    lo-fi: 'model_3.glb',
+    electronic: 'model_4.glb'
   };
 
   const modelPath = modelPaths[genreKey];
   if (!modelPath) return;
 
-  const loader = new GLTFLoader();
+  const loader = new THREE.GLTFLoader();
   loader.load(modelPath, (gltf) => {
-  if (currentModel) {
-    scene.remove(currentModel);
-  }
+    if (currentModel) {
+      scene.remove(currentModel);
+    }
 
-  currentModel = gltf.scene;
+    currentModel = gltf.scene;
 
-  // Auto-center the model
-  const box = new THREE.Box3().setFromObject(currentModel);
-  const center = box.getCenter(new THREE.Vector3());
-  // Get center of bounding box
-const box = new THREE.Box3().setFromObject(currentModel);
-const center = box.getCenter(new THREE.Vector3());
-currentModel.position.sub(center); // Center at origin
+    // Auto-center and scale model
+    const box = new THREE.Box3().setFromObject(currentModel);
+    const center = box.getCenter(new THREE.Vector3());
+    currentModel.position.sub(center);
 
-// Then move to bottom-right
-currentModel.position.set(2, -1.2, 0); // X (right), Y (down), Z (depth)
+    const size = box.getSize(new THREE.Vector3()).length();
+    const scaleFactor = 1.5 / size;
+    currentModel.scale.setScalar(scaleFactor);
 
+    // Optional: adjust horizontal position
+    currentModel.position.x += 1.2;
 
-  // Resize model to fit view
-  const size = box.getSize(new THREE.Vector3()).length();
-  const scaleFactor = 2 / size;
-  currentModel.scale.setScalar(scaleFactor);
-
-  scene.add(currentModel);
-});
+    scene.add(currentModel);
+  });
 }
 
 function animate() {
@@ -59,9 +58,14 @@ function animate() {
   renderer.render(scene, camera);
 }
 
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
 animate();
 
-// Expose globally for script.js to call
+// Expose for external call
 window.loadModelForGenre = loadModelForGenre;
-loadModelForGenre('pop');
-animate();
+loadModelForGenre('pop'); // default model
