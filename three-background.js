@@ -26,13 +26,24 @@ function loadModelForGenre(genreKey) {
 
   const loader = new GLTFLoader();
   loader.load(modelPath, (gltf) => {
-    if (currentModel) {
-      scene.remove(currentModel);
-    }
-    currentModel = gltf.scene;
-    currentModel.scale.set(1, 1, 1);
-    scene.add(currentModel);
-  });
+  if (currentModel) {
+    scene.remove(currentModel);
+  }
+
+  currentModel = gltf.scene;
+
+  // Auto-center the model
+  const box = new THREE.Box3().setFromObject(currentModel);
+  const center = box.getCenter(new THREE.Vector3());
+  currentModel.position.sub(center); // Shift model to center
+
+  // Resize model to fit view
+  const size = box.getSize(new THREE.Vector3()).length();
+  const scaleFactor = 2 / size;
+  currentModel.scale.setScalar(scaleFactor);
+
+  scene.add(currentModel);
+});
 }
 
 function animate() {
