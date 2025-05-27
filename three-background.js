@@ -35,7 +35,14 @@ function loadModelForGenre(genreKey) {
   // Auto-center the model
   const box = new THREE.Box3().setFromObject(currentModel);
   const center = box.getCenter(new THREE.Vector3());
-  currentModel.position.sub(center); // Shift model to center
+  // Get center of bounding box
+const box = new THREE.Box3().setFromObject(currentModel);
+const center = box.getCenter(new THREE.Vector3());
+currentModel.position.sub(center); // Center at origin
+
+// Then move to bottom-right
+currentModel.position.set(2, -1.2, 0); // X (right), Y (down), Z (depth)
+
 
   // Resize model to fit view
   const size = box.getSize(new THREE.Vector3()).length();
