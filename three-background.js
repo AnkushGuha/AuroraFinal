@@ -1,5 +1,5 @@
-import * as THREE from 'https://cdn.skypack.dev/three';
-import { GLTFLoader } from 'https://cdn.skypack.dev/three/examples/jsm/loaders/GLTFLoader.js';
+import * as THREE from 'https://esm.sh/three';
+import { GLTFLoader } from 'https://esm.sh/three/examples/jsm/loaders/GLTFLoader.js';
 
 const canvas = document.getElementById('threeCanvas');
 const scene = new THREE.Scene();
