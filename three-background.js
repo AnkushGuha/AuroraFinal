@@ -3,6 +3,7 @@
 
 const canvas = document.getElementById('threeCanvas');
 const scene = new THREE.Scene();
+const loader = new THREE.GLTFLoader();
 
 const camera = new THREE.PerspectiveCamera(
   75,
