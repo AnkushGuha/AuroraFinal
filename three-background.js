@@ -1,5 +1,5 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js';
-import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/loaders/GLTFLoader.js';
+// Assumes THREE and GLTFLoader are loaded globally via script tags
+// So no need to import anything
 
 const canvas = document.getElementById('threeCanvas');
 const scene = new THREE.Scene();
