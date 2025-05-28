@@ -1,3 +1,6 @@
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js';
+import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/loaders/GLTFLoader.js';
+
 const canvas = document.getElementById('threeCanvas');
 const scene = new THREE.Scene();
 
@@ -9,26 +12,27 @@ const camera = new THREE.PerspectiveCamera(
 );
 const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-
 camera.position.z = 2;
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
-scene.add(ambientLight);
+const light = new THREE.AmbientLight(0xffffff, 1.5);
+scene.add(light);
 
 let currentModel;
 
 function loadModelForGenre(genreKey) {
   const modelPaths = {
-  pop: 'model_1.glb',
-  sad: 'model_2.glb',
-  lofi: 'model_3.glb',
-  electronic: 'model_4.glb'
-};
+    pop: 'model_1.glb',
+    sad: 'model_2.glb',
+    'lo-fi': 'model_3.glb',
+    electronic: 'model_4.glb',
+    rock: 'model_1.glb',
+    jazz: 'model_3.glb'
+  };
 
   const modelPath = modelPaths[genreKey];
   if (!modelPath) return;
 
-  const loader = new THREE.GLTFLoader();
+  const loader = new GLTFLoader();
   loader.load(modelPath, (gltf) => {
     if (currentModel) {
       scene.remove(currentModel);
@@ -36,7 +40,7 @@ function loadModelForGenre(genreKey) {
 
     currentModel = gltf.scene;
 
-    // Auto-center and scale model
+    // Center & scale model
     const box = new THREE.Box3().setFromObject(currentModel);
     const center = box.getCenter(new THREE.Vector3());
     currentModel.position.sub(center);
@@ -45,9 +49,7 @@ function loadModelForGenre(genreKey) {
     const scaleFactor = 1.5 / size;
     currentModel.scale.setScalar(scaleFactor);
 
-    // Optional: adjust horizontal position
-    currentModel.position.x += 1.2;
-
+    currentModel.position.x += 1.2; // adjust X to avoid blocking center
     scene.add(currentModel);
   });
 }
@@ -66,6 +68,6 @@ window.addEventListener('resize', () => {
 
 animate();
 
-// Expose for external call
+// Expose function globally
 window.loadModelForGenre = loadModelForGenre;
-loadModelForGenre('pop'); // default model
+loadModelForGenre('pop'); // Default
