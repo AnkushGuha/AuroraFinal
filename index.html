@@ -147,8 +147,12 @@
     <a href="privacy.html">Privacy Policy</a>
   </p>
 </footer>
-  <script src="script.js"></script>
-  <script type="module" src="three-background.js"></script>
+ <script type="module">
+  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js';
+  import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/loaders/GLTFLoader.js';
+
+  import * as app from './three-background.js';
+</script>
   
 </body>
 </html>
