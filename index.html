@@ -154,10 +154,38 @@
     <a href="privacy.html">Privacy Policy</a>
   </p>
 </footer>
-<!-- Three.js and GLTFLoader via CDN -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.150.1/examples/js/loaders/GLTFLoader.js"></script>
-  <script src="three-background.js"></script>
+
   <script src="script.js"></script>
+  <script type="module">
+  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js';
+  import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/loaders/GLTFLoader.js';
+
+  const canvas = document.getElementById('threeCanvas');
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.position.z = 2;
+  const light = new THREE.AmbientLight(0xffffff, 1.5);
+  scene.add(light);
+
+  let currentModel;
+
+  const loader = new GLTFLoader();
+  loader.load('model_1.glb', gltf => {
+    currentModel = gltf.scene;
+    currentModel.scale.set(1, 1, 1);
+    scene.add(currentModel);
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    if (currentModel) currentModel.rotation.y += 0.005;
+    renderer.render(scene, camera);
+  }
+  animate();
+</script>
+
 </body>
 </html>
